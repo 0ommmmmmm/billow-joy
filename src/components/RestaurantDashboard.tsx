@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 import MenuManagement from "./MenuManagement";
 import BillingInterface from "./BillingInterface";
 import { 
@@ -37,16 +38,7 @@ interface DashboardStats {
 
 const RestaurantDashboard = () => {
   const [currentView, setCurrentView] = useState<'dashboard' | 'orders' | 'billing' | 'analytics' | 'menu'>('dashboard');
-  
-  // Mock data
-  const stats: DashboardStats = {
-    todayRevenue: 12450,
-    ordersCount: 87,
-    avgOrderValue: 143,
-    customersServed: 156
-  };
-
-  const activeOrders: Order[] = [
+  const [activeOrders, setActiveOrders] = useState<Order[]>([
     {
       id: '001',
       table: 'Table 5',
@@ -69,7 +61,43 @@ const RestaurantDashboard = () => {
       status: 'ready',
       timestamp: new Date()
     }
-  ];
+  ]);
+  const { toast } = useToast();
+  
+  // Mock data
+  const stats: DashboardStats = {
+    todayRevenue: 12450,
+    ordersCount: 87,
+    avgOrderValue: 143,
+    customersServed: 156
+  };
+
+  const handleOrderStatusUpdate = (orderId: string) => {
+    setActiveOrders(prev => prev.map(order => {
+      if (order.id === orderId) {
+        const nextStatus = order.status === 'preparing' ? 'ready' : 
+                          order.status === 'ready' ? 'completed' : 'preparing';
+        
+        toast({
+          title: "Order Status Updated",
+          description: `Order #${orderId} is now ${nextStatus}`,
+          variant: "default"
+        });
+        
+        return { ...order, status: nextStatus };
+      }
+      return order;
+    }));
+  };
+
+  const handleCompleteOrder = (orderId: string) => {
+    setActiveOrders(prev => prev.filter(order => order.id !== orderId));
+    toast({
+      title: "Order Completed",
+      description: `Order #${orderId} has been completed and removed from active orders`,
+      variant: "default"
+    });
+  };
 
   const StatCard = ({ icon: Icon, title, value, description, trend }: {
     icon: any;
@@ -115,7 +143,11 @@ const RestaurantDashboard = () => {
         </div>
         <div className="flex items-center justify-between">
           <span className="font-semibold">Total: ₹{order.total}</span>
-          <Button size="sm" variant={order.status === 'ready' ? 'default' : 'outline'}>
+          <Button 
+            size="sm" 
+            variant={order.status === 'ready' ? 'default' : 'outline'}
+            onClick={() => order.status === 'ready' ? handleCompleteOrder(order.id) : handleOrderStatusUpdate(order.id)}
+          >
             {order.status === 'ready' ? 'Complete Order' : 'Update Status'}
           </Button>
         </div>

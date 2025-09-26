@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Search,
   Plus,
@@ -33,11 +34,11 @@ interface AIUpsellSuggestion {
 }
 
 const MenuManagement = () => {
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Mock menu items
-  const menuItems: MenuItem[] = [
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([
     {
       id: '1',
       name: 'Butter Chicken',
@@ -78,7 +79,40 @@ const MenuManagement = () => {
       isAvailable: true,
       preparationTime: 5
     }
-  ];
+  ]);
+
+  const handleAddNewItem = () => {
+    toast({
+      title: "Add New Item",
+      description: "New menu item form would open here. Connect to Supabase for full functionality.",
+      variant: "default"
+    });
+  };
+
+  const handleEditItem = (itemId: string, itemName: string) => {
+    toast({
+      title: "Edit Item",
+      description: `Edit form for "${itemName}" would open here`,
+      variant: "default"
+    });
+  };
+
+  const handleDeleteItem = (itemId: string, itemName: string) => {
+    setMenuItems(prev => prev.filter(item => item.id !== itemId));
+    toast({
+      title: "Item Deleted",
+      description: `"${itemName}" has been removed from the menu`,
+      variant: "default"
+    });
+  };
+
+  const handleAddToOrder = (item: MenuItem) => {
+    toast({
+      title: "Added to Order",
+      description: `${item.name} (₹${item.price}) added to current order`,
+      variant: "default"
+    });
+  };
 
   // Mock AI upsell suggestions based on current order
   const aiSuggestions: AIUpsellSuggestion[] = [
@@ -139,11 +173,20 @@ const MenuManagement = () => {
         </div>
         
         <div className="flex gap-2">
-          <Button size="sm" variant="outline" className="flex-1">
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="flex-1"
+            onClick={() => handleEditItem(item.id, item.name)}
+          >
             <Edit className="h-4 w-4 mr-2" />
             Edit
           </Button>
-          <Button size="sm" variant="ghost">
+          <Button 
+            size="sm" 
+            variant="ghost"
+            onClick={() => handleDeleteItem(item.id, item.name)}
+          >
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
@@ -171,7 +214,12 @@ const MenuManagement = () => {
             <p className="text-sm text-muted-foreground">₹{suggestion.item.price}</p>
           </div>
           <p className="text-sm text-primary font-medium">{suggestion.reason}</p>
-          <Button size="sm" variant="default" className="w-full">
+          <Button 
+            size="sm" 
+            variant="default" 
+            className="w-full"
+            onClick={() => handleAddToOrder(suggestion.item)}
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add to Order
           </Button>
@@ -188,7 +236,7 @@ const MenuManagement = () => {
           <h2 className="text-3xl font-bold tracking-tight">Menu Management</h2>
           <p className="text-muted-foreground">Manage your restaurant menu and view AI-powered suggestions</p>
         </div>
-        <Button variant="warm">
+        <Button variant="warm" onClick={handleAddNewItem}>
           <Plus className="h-4 w-4 mr-2" />
           Add New Item
         </Button>

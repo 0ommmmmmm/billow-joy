@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Receipt,
   CreditCard,
@@ -40,6 +41,7 @@ interface BillData {
 }
 
 const BillingInterface = () => {
+  const { toast } = useToast();
   const [currentBill, setCurrentBill] = useState<BillData>({
     orderId: 'ORD-001',
     table: 'Table 5',
@@ -58,6 +60,7 @@ const BillingInterface = () => {
   const [selectedPayment, setSelectedPayment] = useState<'cash' | 'upi' | 'card' | null>(null);
   const [customerPhone, setCustomerPhone] = useState('');
   const [tipPercent, setTipPercent] = useState(0);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const calculateTotal = () => {
     const subtotal = currentBill.subtotal;
@@ -78,18 +81,72 @@ const BillingInterface = () => {
   }, [tipPercent, currentBill.discount]);
 
   const handlePayment = async () => {
-    // In a real app, this would process the payment
-    console.log('Processing payment:', {
-      ...currentBill,
-      paymentMethod: selectedPayment,
-      customerPhone
+    if (!selectedPayment) return;
+    
+    setIsProcessing(true);
+    
+    try {
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast({
+        title: "Payment Successful!",
+        description: `₹${currentBill.total.toFixed(2)} charged via ${selectedPayment.toUpperCase()}`,
+        variant: "default"
+      });
+      
+      // Auto-print bill and send WhatsApp if phone provided
+      if (customerPhone) {
+        setTimeout(() => handleWhatsAppSend(), 500);
+      }
+      
+    } catch (error) {
+      toast({
+        title: "Payment Failed",
+        description: "Please try again or use a different payment method",
+        variant: "destructive"
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handlePrintBill = () => {
+    // In a real app, this would interface with a thermal printer
+    toast({
+      title: "Bill Printed",
+      description: "Receipt has been sent to the kitchen printer",
+      variant: "default"
     });
     
-    // Simulate payment processing
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Simulate print job
+    window.print();
+  };
+
+  const handleWhatsAppSend = () => {
+    if (!customerPhone) {
+      toast({
+        title: "Phone Required",
+        description: "Please enter customer phone number to send WhatsApp",
+        variant: "destructive"
+      });
+      return;
+    }
     
-    // Would normally integrate with payment gateway here
-    alert('Payment processed successfully! Bill will be printed and WhatsApp message sent.');
+    // Format message
+    const message = `Thank you for dining with us! 🍽️\n\nYour bill details:\nOrder #${currentBill.orderId}\nTotal: ₹${currentBill.total.toFixed(2)}\n\nWe hope you enjoyed your meal! Visit us again soon. ❤️`;
+    
+    // In a real app, this would use WhatsApp Business API
+    const whatsappUrl = `https://wa.me/${customerPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+    
+    toast({
+      title: "WhatsApp Message Sent",
+      description: `Receipt and thank you message sent to ${customerPhone}`,
+      variant: "default"
+    });
+    
+    // Open WhatsApp (for demo purposes)
+    window.open(whatsappUrl, '_blank');
   };
 
   const PaymentButton = ({ 
@@ -289,20 +346,20 @@ const BillingInterface = () => {
         <div className="space-y-3">
           <Button 
             className="w-full h-12" 
-            disabled={!selectedPayment}
+            disabled={!selectedPayment || isProcessing}
             onClick={handlePayment}
             variant="warm"
           >
             <CreditCard className="h-5 w-5 mr-2" />
-            Process Payment (₹{currentBill.total.toFixed(2)})
+            {isProcessing ? 'Processing...' : `Process Payment (₹${currentBill.total.toFixed(2)})`}
           </Button>
           
           <div className="grid grid-cols-2 gap-3">
-            <Button variant="outline" className="h-12">
+            <Button variant="outline" className="h-12" onClick={handlePrintBill}>
               <Printer className="h-4 w-4 mr-2" />
               Print Bill
             </Button>
-            <Button variant="outline" className="h-12" disabled={!customerPhone}>
+            <Button variant="outline" className="h-12" disabled={!customerPhone} onClick={handleWhatsAppSend}>
               <MessageSquare className="h-4 w-4 mr-2" />
               Send WhatsApp
             </Button>
