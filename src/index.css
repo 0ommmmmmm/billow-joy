@@ -2,39 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* RestoBill Pro Design System - Warm, restaurant-friendly colors
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Warm restaurant-inspired palette */
+    --background: 35 15% 98%;
+    --foreground: 20 14% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 20 14% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 20 14% 11%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Warm amber primary - inviting and appetite-inducing */
+    --primary: 30 95% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 35 100% 65%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Warm secondary tones */
+    --secondary: 25 25% 92%;
+    --secondary-foreground: 20 14% 11%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Soft muted tones */
+    --muted: 25 15% 94%;
+    --muted-foreground: 25 8% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Fresh green accent for success states */
+    --accent: 140 70% 45%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Warm destructive */
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Subtle borders and inputs */
+    --border: 25 20% 88%;
+    --input: 25 20% 88%;
+    --ring: 30 95% 50%;
+
+    /* Revenue and success colors */
+    --success: 140 70% 45%;
+    --success-foreground: 0 0% 100%;
+    
+    /* Warning for alerts */
+    --warning: 45 95% 55%;
+    --warning-foreground: 20 14% 11%;
+
+    /* Gradients for beautiful backgrounds */
+    --gradient-warm: linear-gradient(135deg, hsl(30 95% 50%), hsl(35 100% 65%));
+    --gradient-success: linear-gradient(135deg, hsl(140 70% 45%), hsl(145 75% 55%));
+    --gradient-subtle: linear-gradient(180deg, hsl(35 15% 98%), hsl(25 25% 95%));
+
+    /* Elegant shadows */
+    --shadow-warm: 0 10px 30px -10px hsl(30 95% 50% / 0.3);
+    --shadow-soft: 0 4px 20px -4px hsl(20 14% 11% / 0.1);
+    --shadow-card: 0 2px 8px -2px hsl(20 14% 11% / 0.06);
+
+    /* Smooth transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --radius: 0.5rem;
 
