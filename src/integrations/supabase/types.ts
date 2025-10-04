@@ -14,7 +14,176 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      customers: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          name: string | null
+          phone: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          phone?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          phone?: string | null
+        }
+        Relationships: []
+      }
+      menu_items: {
+        Row: {
+          category: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          is_available: boolean | null
+          is_popular: boolean | null
+          name: string
+          preparation_time: number | null
+          price: number
+        }
+        Insert: {
+          category?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_available?: boolean | null
+          is_popular?: boolean | null
+          name: string
+          preparation_time?: number | null
+          price: number
+        }
+        Update: {
+          category?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_available?: boolean | null
+          is_popular?: boolean | null
+          name?: string
+          preparation_time?: number | null
+          price?: number
+        }
+        Relationships: []
+      }
+      order_items: {
+        Row: {
+          id: string
+          menu_item_id: string | null
+          order_id: string | null
+          quantity: number
+        }
+        Insert: {
+          id?: string
+          menu_item_id?: string | null
+          order_id?: string | null
+          quantity: number
+        }
+        Update: {
+          id?: string
+          menu_item_id?: string | null
+          order_id?: string | null
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_menu_item_id_fkey"
+            columns: ["menu_item_id"]
+            isOneToOne: false
+            referencedRelation: "menu_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string | null
+          id: string
+          status: string | null
+          table_id: string | null
+          total: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          status?: string | null
+          table_id?: string | null
+          total?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          status?: string | null
+          table_id?: string | null
+          total?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_table_id_fkey"
+            columns: ["table_id"]
+            isOneToOne: false
+            referencedRelation: "restaurant_tables"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurant_tables: {
+        Row: {
+          id: string
+          name: string
+          status: string | null
+        }
+        Insert: {
+          id?: string
+          name: string
+          status?: string | null
+        }
+        Update: {
+          id?: string
+          name?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
+      tables: {
+        Row: {
+          created_at: string
+          id: string
+          status: string
+          table_number: string
+          table_number_numeric: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          status?: string
+          table_number: string
+          table_number_numeric?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          status?: string
+          table_number?: string
+          table_number_numeric?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
