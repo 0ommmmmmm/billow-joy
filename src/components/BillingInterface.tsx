@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
+import { PhoneSchema } from "@/lib/validation";
+import { z } from "zod";
 import { 
   Receipt,
   CreditCard,
@@ -133,11 +135,23 @@ const BillingInterface = () => {
       return;
     }
     
+    // Validate phone number
+    const result = PhoneSchema.safeParse(customerPhone);
+    if (!result.success) {
+      toast({
+        title: "Invalid phone number",
+        description: "Please enter a valid phone number with country code (e.g., +1234567890)",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     // Format message
     const message = `Thank you for dining with us! 🍽️\n\nYour bill details:\nOrder #${currentBill.orderId}\nTotal: ₹${currentBill.total.toFixed(2)}\n\nWe hope you enjoyed your meal! Visit us again soon. ❤️`;
     
     // In a real app, this would use WhatsApp Business API
-    const whatsappUrl = `https://wa.me/${customerPhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+    const cleanPhone = result.data.replace(/\D/g, '');
+    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
     
     toast({
       title: "WhatsApp Message Sent",

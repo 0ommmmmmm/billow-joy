@@ -1,4 +1,4 @@
 project_id = "bfmpalovrbstmuvlsxsp"
 
 [functions.ai-menu-suggestions]
-verify_jwt = true
+verify_jwt = false

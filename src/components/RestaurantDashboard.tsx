@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import MenuManagement from "./MenuManagement";
 import BillingInterface from "./BillingInterface";
 import { 
@@ -17,7 +18,8 @@ import {
   BarChart3,
   Clock,
   DollarSign,
-  Menu
+  Menu,
+  LogOut
 } from "lucide-react";
 
 interface Order {
@@ -38,6 +40,8 @@ interface DashboardStats {
 
 const RestaurantDashboard = () => {
   const [currentView, setCurrentView] = useState<'dashboard' | 'orders' | 'billing' | 'analytics' | 'menu'>('dashboard');
+  const { toast } = useToast();
+  const { signOut, user } = useAuth();
   const [activeOrders, setActiveOrders] = useState<Order[]>([
     {
       id: '001',
@@ -62,7 +66,6 @@ const RestaurantDashboard = () => {
       timestamp: new Date()
     }
   ]);
-  const { toast } = useToast();
   
   // Mock data
   const stats: DashboardStats = {
@@ -96,6 +99,14 @@ const RestaurantDashboard = () => {
       title: "Order Completed",
       description: `Order #${orderId} has been completed and removed from active orders`,
       variant: "default"
+    });
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    toast({
+      title: "Signed out",
+      description: "You have been signed out successfully",
     });
   };
 
@@ -174,6 +185,9 @@ const RestaurantDashboard = () => {
             </div>
             
             <div className="flex items-center space-x-2">
+              <div className="text-sm text-muted-foreground mr-2">
+                {user?.email}
+              </div>
               <Button
                 variant={currentView === 'dashboard' ? 'default' : 'ghost'}
                 onClick={() => setCurrentView('dashboard')}
@@ -205,6 +219,14 @@ const RestaurantDashboard = () => {
               >
                 <Receipt className="h-4 w-4 mr-2" />
                 Billing
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={handleSignOut}
+                size="sm"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
               </Button>
             </div>
           </div>

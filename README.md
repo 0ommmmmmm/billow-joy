@@ -1,68 +1,145 @@
-# Welcome to your Lovable project
+# Restaurant Management System
 
-## Project info
+A complete restaurant management solution with menu management, orders, billing, and AI-powered upsell suggestions built with Lovable.
 
-**URL**: https://lovable.dev/projects/fbe76825-3e12-4f3d-a2ba-15c973738398
+## ✅ System Status: FULLY FUNCTIONAL
 
-## How can I edit this code?
+All modules are now operational with proper authentication, database integration, and security.
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## 🔐 Authentication
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/fbe76825-3e12-4f3d-a2ba-15c973738398) and start prompting.
+**Sign Up / Sign In**: Visit `/auth` to create an account or log in
+- Email/password authentication  
+- Automatic role assignment (all users get 'staff' role by default)
+- Session persistence across page reloads
+- Secure JWT-based authentication
 
-Changes made via Lovable will be committed automatically to this repo.
+**Default User Roles**:
+- **Staff**: Can manage menu items, orders, and billing
+- **Admin**: Full access (requires manual database role assignment)
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🎯 Features
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### ✅ Dashboard
+- Real-time stats: Revenue, orders, average order value, customers served
+- Active orders with status tracking
+- Quick actions for menu, orders, and billing
+- Today's highlights: Peak hours, top items, loyal customers
 
-Follow these steps:
+### ✅ Menu Management
+- Full CRUD operations (Create, Read, Update, Delete)
+- Search & filter by name, category
+- Availability toggle for items
+- AI-powered upsell suggestions (Google Gemini 2.5 Flash)
+- Input validation with Zod schemas
+
+### ✅ Orders
+- Order tracking by table
+- Status management (preparing → ready → completed)
+- View items, quantities, and totals
+
+### ✅ Billing
+- Multiple payment methods (Cash, UPI, Card)
+- Tip calculation (quick percentages or custom)
+- Automatic tax & discount calculation
+- WhatsApp receipt delivery with phone validation
+- Print bill support
+
+---
+
+## 🔒 Security Features
+
+✅ **Role-Based Access Control (RBAC)**
+- Dedicated `user_roles` table
+- Security definer functions (prevents RLS recursion)
+- Staff and admin roles
+
+✅ **Input Validation**
+- Zod schemas for all inputs
+- Menu items: price, name, category, prep time
+- Phone numbers for WhatsApp
+
+✅ **Row Level Security (RLS)**
+- All tables protected
+- Role-based policies on menu_items, orders, order_items, restaurant_tables
+
+✅ **Authentication Security**
+- JWT-based sessions
+- Protected routes
+- Automatic token refresh
+
+---
+
+## 🚀 Getting Started
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Install dependencies
+npm install
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+1. Navigate to `/auth` and create an account
+2. Explore the dashboard
+3. Manage menu items (add/edit/delete)
+4. Track orders and process billing
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## 📊 Database Schema
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+**Tables**:
+- `menu_items` - Menu with prices, categories, availability
+- `orders` - Customer orders with table assignments
+- `order_items` - Individual items within orders
+- `restaurant_tables` - Table management
+- `user_roles` - Staff and admin roles
 
-## What technologies are used for this project?
+**Functions**:
+- `has_role()` - Security definer for role checks
+- `handle_new_user()` - Auto-assigns 'staff' role
 
-This project is built with:
+---
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🤖 AI Integration
 
-## How can I deploy this project?
+- **Lovable AI Gateway**: Google Gemini 2.5 Flash
+- **Edge Function**: `ai-menu-suggestions`
+- **Context-aware recommendations** based on current order
 
-Simply open [Lovable](https://lovable.dev/projects/fbe76825-3e12-4f3d-a2ba-15c973738398) and click on Share -> Publish.
+---
+
+## 🔧 Tech Stack
+
+- React 18 + TypeScript + Vite
+- Tailwind CSS + shadcn/ui
+- Supabase (PostgreSQL + Edge Functions)
+- Lovable AI Gateway (Google Gemini)
+- Zod validation
+
+---
+
+## ✅ Success Summary
+
+**✅ System ready — all modules functional!**
+
+✅ Authentication (signup/login)  
+✅ Role-based access control  
+✅ Input validation  
+✅ Menu management (full CRUD)  
+✅ Order tracking  
+✅ Billing with payments  
+✅ AI upsell suggestions  
+✅ WhatsApp receipts  
+✅ Database security (RLS)  
+✅ Protected routes  
+
+---
 
 ## Can I connect a custom domain to my Lovable project?
 

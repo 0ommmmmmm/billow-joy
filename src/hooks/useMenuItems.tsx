@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { MenuItemSchema } from '@/lib/validation';
+import { z } from 'zod';
 
 export interface MenuItem {
   id: string;
@@ -47,9 +49,12 @@ export const useMenuItems = () => {
 
   const addMenuItem = async (item: Omit<MenuItem, 'id'>) => {
     try {
+      // Validate input
+      const validatedItem = MenuItemSchema.parse(item);
+      
       const { data, error } = await supabase
         .from('menu_items')
-        .insert([item])
+        .insert([validatedItem as any])
         .select()
         .single();
 
@@ -62,6 +67,14 @@ export const useMenuItems = () => {
       });
       return { success: true, data };
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: 'Validation Error',
+          description: error.errors[0].message,
+          variant: 'destructive',
+        });
+        return { success: false, error };
+      }
       console.error('Error adding menu item:', error);
       toast({
         title: 'Error',
@@ -74,6 +87,7 @@ export const useMenuItems = () => {
 
   const updateMenuItem = async (id: string, updates: Partial<MenuItem>) => {
     try {
+      // For updates, we don't need full validation - database handles it
       const { data, error } = await supabase
         .from('menu_items')
         .update(updates)
